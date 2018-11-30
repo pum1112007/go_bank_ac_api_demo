@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type User struct {
@@ -12,10 +13,10 @@ type User struct {
 
 type BankAccount struct {
 	ID      int    `json:"id"`
-	userID  int    `json:"user_id"`
+	UserID  int    `json:"user_id"`
 	Number  int    `json:"number"`
 	Name    string `json:"name"`
-	balance int    `json:"balance"`
+	Balance int    `json:"balance"`
 }
 
 type Service struct {
@@ -72,12 +73,18 @@ func (s *Service) Delete(u *User) error {
 	return err
 }
 
+
 //BankAccount Service
-// func (s *Service) AddBankAc(u *User) error {
-// 	stmt := "DELETE FROM users WHERE id = $1"
-// 	_, err := s.DB.Exec(stmt, u.ID)
-// 	return err
-// }
+func (s *Service) AddBankAc(bkAc *BankAccount) error {
+	stmt := `INSERT INTO BankAccount(user_id, number,name,balance)
+		 values ($1, $2,$3,$4) RETURNING id`
+	fmt.Println(bkAc.UserID)
+	row := s.DB.QueryRow(stmt, bkAc.UserID, bkAc.Number, bkAc.Name, bkAc.Balance)
+	err := row.Scan(&bkAc.ID)
+
+	return err
+}
+
 // func (s *Service) GetAllUserBkAc(u *User) error {
 // 	stmt := "DELETE FROM users WHERE id = $1"
 // 	_, err := s.DB.Exec(stmt, u.ID)

@@ -15,7 +15,7 @@ type UserService interface {
 	Insert(u *user.User) error
 	Update(u *user.User) error
 	Delete(u *user.User) error
-	// AddBankAc(u *user.User) error
+	AddBankAc(bkAc *user.BankAccount) error
 	// GetAllUserBkAc(u *user.User) error
 	// RemoveBkAc(u *user.User) error
 	// Withdraw(u *user.User) error
@@ -51,14 +51,28 @@ func (h *Handler) allUser(c *gin.Context) {
 }
 
 //BankAccount API
-// func (h *Handler) addBankAc(c *gin.Context) {
-// 	err := h.userService.AddBankAc()
-// 	if err != nil {
-// 		c.AbortWithError(http.StatusInternalServerError, err)
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, users)
-// }
+func (h *Handler) addBankAc(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	var bkAc user.BankAccount
+	err = c.ShouldBindJSON(&bkAc)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	bkAc.UserID = id
+	err = h.userService.AddBankAc(&bkAc)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, bkAc)
+}
+
 // func (h *Handler) getAllUserBkAc(c *gin.Context) {
 // 	err := h.userService.GetAllUserBkAc()
 // 	if err != nil {
@@ -179,7 +193,7 @@ func StartServer(addr string, db *sql.DB) error {
 	r.POST("/users", h.createUser)
 	r.PUT("/users/:id", h.updateUser)
 	r.DELETE("/users/:id", h.deleteUser)
-	// r.POST("/users/:id/bankAccount", h.addBankAc)
+	r.POST("/users/:id/bankAccount", h.addBankAc)
 	// r.GET("/users/:id/bankAccounts", h.getAllUserBkAc)
 	// r.DELETE("/bankAccount/:id", h.removeBkAc)
 	// r.PUT("/bankAccount/:id/withdraw", h.withdraw)
