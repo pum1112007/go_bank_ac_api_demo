@@ -71,3 +71,35 @@ func (s *Service) Delete(u *User) error {
 	_, err := s.DB.Exec(stmt, u.ID)
 	return err
 }
+
+//BankAccount Service
+func (s *Service) AddBankAc(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}
+func (s *Service) GetAllUserBkAc(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}
+func (s *Service) RemoveBkAc(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}
+func (s *Service) Withdraw(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}
+func (s *Service) Deposit(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}
+func (s *Service) Transfers(u *User) error {
+	stmt := "DELETE FROM users WHERE id = $1"
+	_, err := s.DB.Exec(stmt, u.ID)
+	return err
+}

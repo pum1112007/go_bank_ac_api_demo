@@ -21,7 +21,21 @@ func main() {
 		id SERIAL PRIMARY KEY,
 		key TEXT
 	);
-	`
+	CREATE TABLE IF NOT EXISTS Users (
+		id INT,
+		first_name TEXT,
+		last_name TEXT,
+		PRIMARY KEY (id)
+	);
+	CREATE TABLE BankAccount (
+		id INT,
+		user_id INT,
+		number INT,
+		name TEXT,
+		balance INT,
+		PRIMARY KEY (id)
+	);
+	`	
 	if _, err := db.Exec(createTable); err != nil {
 		log.Fatal(err)
 	}

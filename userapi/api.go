@@ -15,8 +15,13 @@ type UserService interface {
 	Insert(u *user.User) error
 	Update(u *user.User) error
 	Delete(u *user.User) error
+	AddBankAc(u *user.User) error
+	GetAllUserBkAc(u *user.User) error
+	RemoveBkAc(u *user.User) error
+	Withdraw(u *user.User) error
+	Deposit(u *user.User) error
+	Transfers(u *user.User) error
 }
-
 type Handler struct {
 	userService UserService
 }
@@ -36,7 +41,6 @@ func (h *Handler) getUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 }
-
 func (h *Handler) allUser(c *gin.Context) {
 	users, err := h.userService.All()
 	if err != nil {
@@ -46,6 +50,55 @@ func (h *Handler) allUser(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+//BankAccount API
+func (h *Handler) addBankAc(c *gin.Context) {
+	err := h.userService.AddBankAc()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
+func (h *Handler) getAllUserBkAc(c *gin.Context) {
+	err := h.userService.GetAllUserBkAc()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
+func (h *Handler) removeBkAc(c *gin.Context) {
+	err := h.userService.RemoveBkAc()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
+func (h *Handler) withdraw(c *gin.Context) {
+	err := h.userService.Withdraw()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
+func (h *Handler) deposit(c *gin.Context) {
+	err := h.userService.Deposit()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
+func (h *Handler) transfers(c *gin.Context) {
+	users, err := h.userService.Transfers()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}
 func (h *Handler) updateUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -125,13 +178,13 @@ func StartServer(addr string, db *sql.DB) error {
 	r.GET("/users/:id", h.getUser)
 	r.POST("/users", h.createUser)
 	r.PUT("/users/:id", h.updateUser)
-	//r.POST("/users/:id/bankAccount", )
 	r.DELETE("/users/:id", h.deleteUser)
-	// r.GET("/users/:id/bankAccounts",h.)
-	// r.DELETE("/bankAccount/:id")
-	// r.PUT("/bankAccount/:id/withdraw")
-	// r.PUT("/bankAccount/:id/deposit")
-	// r.POST("/transfers")
+	r.POST("/users/:id/bankAccount", h.addBankAc)
+	r.GET("/users/:id/bankAccounts", h.getAllUserBkAc)
+	r.DELETE("/bankAccount/:id", h.removeBkAc)
+	r.PUT("/bankAccount/:id/withdraw", h.withdraw)
+	r.PUT("/bankAccount/:id/deposit", h.deposit)
+	r.POST("/transfers", h.transfers)
 
 	return r.Run(addr)
 }
