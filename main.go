@@ -22,20 +22,19 @@ func main() {
 		key TEXT
 	);
 	CREATE TABLE IF NOT EXISTS Users (
-		id INT,
+		id SERIAL PRIMARY KEY,
 		first_name TEXT,
-		last_name TEXT,
-		PRIMARY KEY (id)
+		last_name TEXT
 	);
-	CREATE TABLE BankAccount (
-		id INT,
+	CREATE TABLE IF NOT EXISTS BankAccount (
+		id SERIAL PRIMARY KEY,
 		user_id INT,
 		number INT,
 		name TEXT,
-		balance INT,
-		PRIMARY KEY (id)
+		balance INT
+		 
 	);
-	`	
+	`
 	if _, err := db.Exec(createTable); err != nil {
 		log.Fatal(err)
 	}

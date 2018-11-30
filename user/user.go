@@ -34,8 +34,8 @@ func (s *Service) FindByID(id int) (*User, error) {
 }
 
 func (s *Service) Insert(u *User) error {
-	stmt := `INSERT INTO users(first_name, last_name, email)
-		 values ($1, $2, $3) RETURNING id`
+	stmt := `INSERT INTO Users(first_name, last_name)
+		 values ($1, $2) RETURNING id`
 	row := s.DB.QueryRow(stmt, u.FirstName, u.LastName)
 	err := row.Scan(&u.ID)
 
@@ -43,7 +43,7 @@ func (s *Service) Insert(u *User) error {
 }
 
 func (s *Service) All() ([]User, error) {
-	stmt := "SELECT id, first_name, last_name, email FROM users ORDER BY id DESC"
+	stmt := "SELECT id, first_name, last_name FROM Users ORDER BY id DESC"
 	rows, err := s.DB.Query(stmt)
 	if err != nil {
 		return nil, err
@@ -61,45 +61,45 @@ func (s *Service) All() ([]User, error) {
 }
 
 func (s *Service) Update(u *User) error {
-	stmt := "UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4"
+	stmt := "UPDATE Users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4"
 	_, err := s.DB.Exec(stmt, u.FirstName, u.LastName, u.ID)
 	return err
 }
 
 func (s *Service) Delete(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
+	stmt := "DELETE FROM Users WHERE id = $1"
 	_, err := s.DB.Exec(stmt, u.ID)
 	return err
 }
 
 //BankAccount Service
-func (s *Service) AddBankAc(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
-func (s *Service) GetAllUserBkAc(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
-func (s *Service) RemoveBkAc(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
-func (s *Service) Withdraw(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
-func (s *Service) Deposit(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
-func (s *Service) Transfers(u *User) error {
-	stmt := "DELETE FROM users WHERE id = $1"
-	_, err := s.DB.Exec(stmt, u.ID)
-	return err
-}
+// func (s *Service) AddBankAc(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
+// func (s *Service) GetAllUserBkAc(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
+// func (s *Service) RemoveBkAc(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
+// func (s *Service) Withdraw(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
+// func (s *Service) Deposit(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
+// func (s *Service) Transfers(u *User) error {
+// 	stmt := "DELETE FROM users WHERE id = $1"
+// 	_, err := s.DB.Exec(stmt, u.ID)
+// 	return err
+// }
