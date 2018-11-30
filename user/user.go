@@ -24,7 +24,7 @@ type Service struct {
 }
 
 func (s *Service) FindByID(id int) (*User, error) {
-	stmt := "SELECT id, first_name, last_name, email FROM users WHERE id = $1"
+	stmt := "SELECT id, first_name, last_name FROM users WHERE id = $1"
 	row := s.DB.QueryRow(stmt, id)
 	var u User
 	err := row.Scan(&u.ID, &u.FirstName, &u.LastName)
@@ -73,7 +73,6 @@ func (s *Service) Delete(u *User) error {
 	return err
 }
 
-
 //BankAccount Service
 func (s *Service) AddBankAc(bkAc *BankAccount) error {
 	stmt := `INSERT INTO BankAccount(user_id, number,name,balance)
@@ -85,11 +84,23 @@ func (s *Service) AddBankAc(bkAc *BankAccount) error {
 	return err
 }
 
-// func (s *Service) GetAllUserBkAc(u *User) error {
-// 	stmt := "DELETE FROM users WHERE id = $1"
-// 	_, err := s.DB.Exec(stmt, u.ID)
-// 	return err
-// }
+func (s *Service) GetAllUserBkAc(id int) ([]BankAccount, error) {
+	stmt, _ := s.DB.Prepare("SELECT * FROM BankAccount WHERE user_id = $1")
+	rows, _ := stmt.Query(id)
+
+	var bkAc []BankAccount
+	for rows.Next() {
+		var bk BankAccount
+		err := rows.Scan(&bk.ID, &bk.UserID, &bk.Number, &bk.Name, &bk.Balance)
+		if err != nil {
+			return nil, err
+		}
+		bkAc = append(bkAc, bk)
+	}
+
+	return bkAc, nil
+}
+
 // func (s *Service) RemoveBkAc(u *User) error {
 // 	stmt := "DELETE FROM users WHERE id = $1"
 // 	_, err := s.DB.Exec(stmt, u.ID)
