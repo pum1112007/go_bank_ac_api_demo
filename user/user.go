@@ -26,7 +26,7 @@ func (s *Service) FindByID(id int) (*User, error) {
 	stmt := "SELECT id, first_name, last_name, email FROM users WHERE id = $1"
 	row := s.DB.QueryRow(stmt, id)
 	var u User
-	err := row.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email)
+	err := row.Scan(&u.ID, &u.FirstName, &u.LastName)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (s *Service) FindByID(id int) (*User, error) {
 func (s *Service) Insert(u *User) error {
 	stmt := `INSERT INTO users(first_name, last_name, email)
 		 values ($1, $2, $3) RETURNING id`
-	row := s.DB.QueryRow(stmt, u.FirstName, u.LastName, u.Email)
+	row := s.DB.QueryRow(stmt, u.FirstName, u.LastName)
 	err := row.Scan(&u.ID)
 
 	return err
@@ -51,7 +51,7 @@ func (s *Service) All() ([]User, error) {
 	var us []User
 	for rows.Next() {
 		var u User
-		err := rows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email)
+		err := rows.Scan(&u.ID, &u.FirstName, &u.LastName)
 		if err != nil {
 			return nil, err
 		}
@@ -62,7 +62,7 @@ func (s *Service) All() ([]User, error) {
 
 func (s *Service) Update(u *User) error {
 	stmt := "UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4"
-	_, err := s.DB.Exec(stmt, u.FirstName, u.LastName, u.Email, u.ID)
+	_, err := s.DB.Exec(stmt, u.FirstName, u.LastName, u.ID)
 	return err
 }
 

@@ -1,8 +1,8 @@
-package api
+package userapi
 
 import (
-	"GO_BANK_AC_API_DEMO/user"
 	"database/sql"
+	"go_bank_ac_api_demo/user"
 	"net/http"
 	"strconv"
 
@@ -74,9 +74,6 @@ func (h *Handler) updateUser(c *gin.Context) {
 	}
 	if update.LastName != nil {
 		u.LastName = *update.LastName
-	}
-	if update.Email != nil {
-		u.Email = *update.Email
 	}
 
 	err = h.userService.Update(u)

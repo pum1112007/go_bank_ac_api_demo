@@ -1,4 +1,4 @@
-module github.com/pum1112007/go_bank_ac_api_demo
+module go_bank_ac_api_demo
 
 require (
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
